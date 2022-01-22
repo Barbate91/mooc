@@ -1,0 +1,5 @@
+tietokone:computer
+below:alla oleva
+computer:tietokone
+monkey:apina
+beer:olut
