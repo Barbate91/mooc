@@ -1,0 +1,5 @@
+tieokone:computer
+computer:tieokone
+computer:tietokone
+monkey:apina
+beer:olut
