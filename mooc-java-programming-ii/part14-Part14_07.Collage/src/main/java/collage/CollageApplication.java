@@ -2,15 +2,21 @@ package collage;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class CollageApplication extends Application {
 
@@ -35,28 +41,65 @@ public class CollageApplication extends Application {
             while (xCoordinate < width) {
 
                 Color color = imageReader.getColor(xCoordinate, yCoordinate);
-                double red = color.getRed();
-                double green = color.getGreen();
-                double blue = color.getBlue();
+                double red = 1.0 - color.getRed();
+                double green = 1.0 - color.getGreen();
+                double blue = 1.0 - color.getBlue();
                 double opacity = color.getOpacity();
 
                 Color newColor = new Color(red, green, blue, opacity);
 
-                imageWriter.setColor(xCoordinate, yCoordinate, newColor);
+                //imageWriter.setColor(xCoordinate, yCoordinate, newColor);
+                imageWriter.setColor(xCoordinate/2,yCoordinate/2,newColor);
+                imageWriter.setColor(width/2+xCoordinate/2,yCoordinate/2,newColor);
+                imageWriter.setColor(xCoordinate/2,height/2+yCoordinate/2,newColor);
+                imageWriter.setColor(width/2+xCoordinate/2,height/2+yCoordinate/2,newColor);
 
-                xCoordinate++;
+                xCoordinate+=2;
             }
 
-            yCoordinate++;
+            yCoordinate+=2;
         }
 
-        ImageView image = new ImageView(targetImage);
+        //Pane warholPane = generateWarholPane(targetImage,width,height);
 
+        ImageView image = new ImageView(targetImage);
         Pane pane = new Pane();
         pane.getChildren().add(image);
 
         stage.setScene(new Scene(pane));
         stage.show();
+    }
+
+    private Pane generateWarholPane(WritableImage writableImage, double width, double height) {
+        Pane pane = new Pane();
+
+        ArrayList<ImageView> images = new ArrayList<>();
+
+        for (int i = 0; i < 4; i++) {
+            ImageView image = new ImageView(writableImage);
+            image.setScaleX(0.5);
+            image.setScaleY(0.5);
+
+            images.add(image);
+        }
+
+        images.get(0).setTranslateX(-width/4);
+        images.get(0).setTranslateY(-height/4);
+        pane.getChildren().add(images.get(0));
+
+        images.get(1).setTranslateX(width/4);
+        images.get(1).setTranslateY(-height/4);
+        pane.getChildren().add(images.get(1));
+
+        images.get(2).setTranslateX(width/4);
+        images.get(2).setTranslateY(height/4);
+        pane.getChildren().add(images.get(2));
+
+        images.get(3).setTranslateX(-width/4);
+        images.get(3).setTranslateY(height/4);
+        pane.getChildren().add(images.get(3));
+
+        return pane;
     }
 
     public static void main(String[] args) {

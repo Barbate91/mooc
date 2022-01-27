@@ -1,11 +1,49 @@
 package smiley;
 
 
-public class SmileyApplication {
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
+public class SmileyApplication extends Application {
 
 
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        launch(args);
     }
 
+    @Override
+    public void start(Stage window) {
+
+        Canvas paintingCanvas = new Canvas(640, 480);
+        GraphicsContext painter = paintingCanvas.getGraphicsContext2D();
+
+        ColorPicker colorPalette = new ColorPicker();
+        painter.setFill(Color.BLACK);
+
+        BorderPane paintingLayout = new BorderPane();
+        paintingLayout.setCenter(paintingCanvas);
+        paintingLayout.setRight(colorPalette);
+
+        painter.fillRect(80,80,50,50);
+        painter.fillRect(160,160,50,50);
+
+
+        paintingCanvas.setOnMouseDragged((event) -> {
+            double xLocation = event.getX();
+            double yLocation = event.getY();
+            painter.setFill(colorPalette.getValue());
+            painter.fillOval(xLocation, yLocation, 4, 4);
+        });
+
+        Scene view = new Scene(paintingLayout);
+
+        window.setScene(view);
+        window.show();
+    }
 }
