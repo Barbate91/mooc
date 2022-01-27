@@ -1,6 +1,7 @@
 package application;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -30,6 +31,28 @@ public class UserInterface {
             }
 
             // implement the functionality here
+            if (command.equals("1")) {
+                System.out.println("Listing the database contents");
+                List<Todo> todos = database.list();
+                todos.forEach(todo -> {
+                    System.out.println(todo.toString());
+                });
+            } else if (command.equals("2")) {
+                System.out.println("Adding a new todo");
+                System.out.println("Enter name");
+                String inputName = this.scanner.nextLine();
+                System.out.println("Enter description");
+                String inputDesc = this.scanner.nextLine();
+                database.add(new Todo(inputName,inputDesc,false));
+            } else if (command.equals("3")) {
+                System.out.println("Which todo should be marked as done (give the id)?");
+                int inputId = Integer.parseInt(this.scanner.nextLine());
+                database.markAsDone(inputId);
+            } else if (command.equals("4")) {
+                System.out.println("Which todo should be removed (give the id)?");
+                int inputId = Integer.parseInt(this.scanner.nextLine());
+                database.remove(inputId);
+            }
         }
 
         System.out.println("Thank you!");
